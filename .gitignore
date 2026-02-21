@@ -1,0 +1,15 @@
+data/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.pt
+*.pth
+myenv/
+venv/
+env/
+*.log
+*.csv
+*.json
+*.h5
+*.ckpt
+*.tar.gz    
