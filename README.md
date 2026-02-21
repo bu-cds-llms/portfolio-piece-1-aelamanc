@@ -1,82 +1,73 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/brKTKdOU)
 # Portfolio Piece Assignment
 
-This repository is a template for your portfolio piece. You'll build on your weekly labs to create a polished, well-documented project that demonstrates your understanding of the concepts we've covered.
+# Neural Network Design Choices Using Fashion-MNIST
 
-## What You're Building
+**Portfolio Piece 1** — Extending Lab 2 (Neural Network Exploration)
 
-Your portfolio piece could be a Jupyter notebook (or set of notebooks), or another reporting format (PDF with embedded images, etc.) that:
-- Demonstrates understanding of course concepts
-- Includes working, well-documented code (in notebooks or imported scripts)
-- Analyzes results critically
-- Tells a clear story from problem/question to approach to results and insights
+## Overview
 
-If you'd like, this can become part of your professional portfolio, so treat it as work you'd be proud to show a potential employer or collaborator.
+In Lab 2, we built simple neural networks on XOR and MNIST where even basic MLPs hit 97%+, leaving little room to see how design choices matter. This project switches to **Fashion-MNIST** — same 28×28 grayscale format but a much harder 10-class task (t-shirts vs. pullovers, sneakers vs. ankle boots) — and systematically isolates individual variables to measure their real impact on learning.
 
-## Grading
+## Methods
 
-Your work will be evaluated on:
-- **Conceptual Understanding** (5 pts): Do you explain *why* you chose specific methods? Do you connect to course material?
-- **Technical Implementation** (5 pts): Does your code run without errors? Do all components work correctly?
-- **Code Quality & Documentation** (5 pts): Is your notebook/code clear and well-organized? Does it tell a story?
-- **Critical Analysis** (5 pts): Do you interpret results thoughtfully? Discuss limitations and tradeoffs?
-- **Peer Reviews** (5 pts): Did you provide constructive feedback on two classmates' projects?
+All experiments use PyTorch MLPs on Fashion-MNIST (60K train / 10K test, 10 classes). Each experiment changes exactly one variable from a common baseline to enable fair comparison.
 
-See the full [rubric](https://lauren897.github.io/cds593-private/rubrics.html#portfolio-piece-rubric) for details.
+**Architecture experiments:**
+- **Depth** — 1, 2, 3, and 5 hidden layers (all width 128)
+- **Width** — 64, 128, and 256 neurons (all 2 hidden layers)
+- **Activation functions** — ReLU, LeakyReLU, GELU, and Sigmoid (2 layers, width 128)
 
-## Suggested Repository Structure
+**Optimization experiments:**
+- **Optimizers** — SGD, SGD + Momentum, Adam, and AdamW
+- **Learning rate schedules** — Constant LR, StepLR, and Cosine Annealing
+- **Regularization** — Dropout (0.3), Weight Decay (L2), Batch Normalization, and all three combined
 
-You're free to organize this however makes sense for your project, but here's a structure that works well:
+## Key Results
+
+- **Depth:** Minimal impact — 1 to 5 hidden layers spanned only 0.5% (89.0% → 89.5%), with all configurations overfitting after epoch ~10.
+- **Width:** Diminishing returns — a 4× parameter increase (64 → 256) yielded just 0.7% improvement.
+- **Activations:** LeakyReLU led at 89.5%, Sigmoid trailed at 88.5% due to vanishing gradients; the 1% spread suggests activation choice is a minor factor for shallow MLPs.
+- **Optimizers:** Adam and AdamW reached ~88% within 5 epochs while vanilla SGD lagged at ~83%, though all converged near 89% by epoch 25.
+- **LR Schedules:** Small but consistent boost (~0.4%), with StepLR slightly outperforming Cosine Annealing and Constant LR.
+- **Regularization:** Combining dropout, batch normalization, and weight decay was most effective at reducing the generalization gap.
+
+## Repository Structure
 
 ```
-your-portfolio-piece/
-├── README.md (this file - update it with your project details)
-├── requirements.txt or equivalent
+portfolio-piece/
+├── README.md
+├── requirements.txt
 ├── notebooks/
-│   └── main_analysis.ipynb (or multiple notebooks)
-├── src/ (optional - if you refactor code into modules)
-├── data/ (see note below about data)
-├── outputs/ (figures, saved models, etc.)
+│   └── main_analysis.ipynb
+├── src/
+│   └── utils.py                 # Training, evaluation, and visualization utilities
+├── outputs/                     # Generated figures
+└── data/                        # Fashion-MNIST (auto-downloaded, gitignored)
 ```
 
-**About data**: If your dataset is small (<10 MB), you can include it in the repo. For larger datasets, put instructions in your README for how to download/access it, and add data files to `.gitignore`.
+## How to Run
 
-## Writing a Good README
+```bash
+# 1. Clone the repo
+git clone <repo-url>
+cd portfolio-piece
 
-Once you've completed your project, update this README to include:
+# 2. Install dependencies
+pip install -r requirements.txt
 
-1. **Project Title** - make it descriptive
-2. **Overview** - 2-3 sentences: what problem are you solving and why?
-3. **Methods** - what approaches did you use? Why these choices?
-4. **Key Results** - what did you find? (keep it brief, details go in the notebook)
-5. **How to Run** - step-by-step instructions so someone can reproduce your work
-6. **Requirements** - what packages/versions are needed?
+# 3. Run the notebook
+cd notebooks
+jupyter notebook main_analysis.ipynb
+```
 
-Your README should make it easy for someone to understand what you did and run your code.
+Fashion-MNIST downloads automatically via `torchvision` on first run (~30MB). The notebook takes approximately 15–25 minutes on CPU or ~5 minutes with GPU/MPS.
 
-## Peer Review Process
+## Requirements
 
-You'll be assigned two classmates' repositories to review. Provide your feedback through **pull requests**:
+- Python 3.9+
+- PyTorch >= 2.0
+- torchvision >= 0.15
+- numpy, matplotlib, seaborn, scikit-learn, tqdm
 
-1. Clone your assigned classmate's repository to your machine
-2. Read through their notebooks, scripts, and documentation
-3. Try running the code yourself
-4. Create a pull request with inline comments on their code/analysis
-5. In the PR description, provide overall feedback addressing:
-   - What worked well conceptually and technically?
-   - What could be clearer in the documentation or analysis?
-   - Specific suggestions for deeper analysis or improvements
-   - Overall strengths of the project
-
-Be constructive and specific. Good peer reviews identify both strengths and areas for growth.
-
-You are *not* grading each other's pieces, just providing feedback.
-
-## Timeline
-
-- **Friday, Feb 20**: Portfolio piece due (push your final version to this repo)
-- **Friday, Feb 27**: Peer reviews due (submit PRs with feedback to your assigned classmates' repos)
-
-## Questions?
-
-We can discuss more in class, in office hours, in discussion, and you can ask on Piazza.
+See `requirements.txt` for pinned versions.
