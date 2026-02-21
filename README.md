@@ -61,7 +61,7 @@ cd notebooks
 jupyter notebook main_analysis.ipynb
 ```
 
-Fashion-MNIST downloads automatically via `torchvision` on first run (~30MB). The notebook takes approximately 15–25 minutes on CPU or ~5 minutes with GPU/MPS.
+Fashion-MNIST downloads automatically via `torchvision` on first run (~30MB).
 
 ## Requirements
 
