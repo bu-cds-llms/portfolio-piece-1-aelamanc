@@ -7,6 +7,7 @@
 
 ## Overview
 
+
 In Lab 2, we built simple neural networks on XOR and MNIST where even basic MLPs hit 97%+, leaving little room to see how design choices matter. This project switches to **Fashion-MNIST** — same 28×28 grayscale format but a much harder 10-class task (t-shirts vs. pullovers, sneakers vs. ankle boots) — and systematically isolates individual variables to measure their real impact on learning.
 
 ## Methods
@@ -61,7 +62,7 @@ cd notebooks
 jupyter notebook main_analysis.ipynb
 ```
 
-Fashion-MNIST downloads automatically via `torchvision` on first run (~30MB).
+Fashion-MNIST downloads automatically via `torchvision` on first run which is around ~30MB.
 
 ## Requirements
 
